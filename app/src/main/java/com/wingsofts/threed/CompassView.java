@@ -23,7 +23,7 @@ public class CompassView extends View {
     private float mTouchY;
     private float mCanvasRotateX = 0;
     private float mCanvasRotateY = 0;
-    private float mCanvasMaxRotateDegree = 50;
+    private float mCanvasMaxRotateDegree = 150;
     private Matrix mMatrix = new Matrix();
     private Camera mCamera = new Camera();
     private Paint mPaint;
@@ -39,7 +39,6 @@ public class CompassView extends View {
         super(context, attrs);
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-        mCanvasMaxRotateDegree = 20;
         mBgColor = Color.parseColor("#227BAE");
         mPath = new Path();
     }
@@ -52,52 +51,50 @@ public class CompassView extends View {
         mCenterY = getHeight() / 2;
 
         //进行画布的旋转，主要用于小圆点跟随手指移动。
-        canvas.rotate((float) alpha,mCenterX,mCenterY);
+        canvas.rotate((float) alpha, mCenterX, mCenterY);
 
-        alpha = Math.atan((mTouchX-mCenterX)/(mCenterY-mTouchY));
+        alpha = Math.atan((mTouchX - mCenterX) / (mCenterY - mTouchY));
         alpha = Math.toDegrees(alpha);
-        if(mTouchY>mCenterY){
-            alpha = alpha+180;
+        if (mTouchY > mCenterY) {
+            alpha = alpha + 180;
         }
 
         rotateCanvas(canvas);
-        mPaint.setTextSize(30);
+        mPaint.setTextSize(20);
         mPaint.setColor(Color.WHITE);
         mPaint.setStrokeWidth(2);
-        canvas.drawText("N",mCenterX,150,mPaint);
+        canvas.drawText("N", mCenterX, 150, mPaint);
         drawArc(canvas);
-
         drawCircle(canvas);
-
         drawPath(canvas);
     }
 
     private void drawPath(Canvas canvas) {
 //        mPaint.setColor(Color.parseColor("#FF3366"));
-        mPath.moveTo(mCenterX,293);
-        mPath.lineTo(mCenterX-30,mCenterY);
-        mPath.lineTo(mCenterX,2*mCenterY-293);
-        mPath.lineTo(mCenterX+30,mCenterY);
-        mPath.lineTo(mCenterX,293);
+        mPath.moveTo(mCenterX, 293);
+        mPath.lineTo(mCenterX - 30, mCenterY);
+        mPath.lineTo(mCenterX, 2 * mCenterY - 293);
+        mPath.lineTo(mCenterX + 30, mCenterY);
+        mPath.lineTo(mCenterX, 293);
         mPath.close();
 
-        canvas.drawPath(mPath,mPaint);
+        canvas.drawPath(mPath, mPaint);
         mPaint.setColor(Color.parseColor("#55227BAE"));
-        canvas.drawCircle(mCenterX,mCenterY,20,mPaint);
+        canvas.drawCircle(mCenterX, mCenterY, 20, mPaint);
     }
 
     private void drawCircle(Canvas canvas) {
         mPaint.setAlpha(255);
-        canvas.drawCircle(mCenterX,290,10,mPaint);
+        canvas.drawCircle(mCenterX, 290, 10, mPaint);
     }
 
     private void drawArc(Canvas canvas) {
         canvas.save();
         for (int i = 0; i < 120; i++) {
 
-            mPaint.setAlpha(255-(mAlpha * i/120));
+            mPaint.setAlpha(255 - (mAlpha * i / 120));
             canvas.drawLine(mCenterX, 250, mCenterX, 270, mPaint);
-            canvas.rotate(3,mCenterX,mCenterY);
+            canvas.rotate(3, mCenterX, mCenterY);
         }
         canvas.restore();
     }
